@@ -5,17 +5,17 @@ var path=require('path');
 var cookieParser = require('cookie-parser');
 var jwt = require('jsonwebtoken');
 const FirebaseAuth = require('firebaseauth');
-const firebaseAuth = new FirebaseAuth("AIzaSyAPIYWshsmMtTeoiHBEzFzhWsGRRQ6dU4g");
+const firebaseAuth = new FirebaseAuth("AIzaSyAPIYWshsmMtTeoiHBEzFzhWsGRRQ6dU4g");   // Change to your Firebase Web API Key
 const admin = require('firebase-admin')
-var serviceAccount = require('projectone-5e7be-firebase-adminsdk-h55nn-16ebad401b.json');
+var serviceAccount = require('projectone-5e7be-firebase-adminsdk-h55nn-16ebad401b.json');    //Change to the path of your Firebase Admin-SDK private key jason file
 admin.initializeApp({
     credential:admin.credential.cert(serviceAccount),
-    databaseURL: "https://projectone-5e7be.firebaseio.com"
+    databaseURL: "https://projectone-5e7be.firebaseio.com"  //Change to your firebase databaseURL
 });
 var db=admin.firestore();
 var i = "Aemulus Corp";
 var a = 'http://localhost:3000/aemulus';
-var signKey = "TOeo7C5Z-6HVn3mI8G-vX-TUhUBaU128zGNO0v-ghyTj6_B5xt3gbr0uodEZAjommr3GD290a1jLmWKo4yvpzg";
+var signKey = "TOeo7C5Z-6HVn3mI8G-vX-TUhUBaU128zGNO0v-ghyTj6_B5xt3gbr0uodEZAjommr3GD290a1jLmWKo4yvpzg"; //Change to your signature key for JWT
 var uid;
 
 app.use(express.static(__dirname+'/assets'));
@@ -175,13 +175,18 @@ app.get('/signout',(req,res)=>{
 app.get('/main', (req, res,next) => {
     accessControlUnauthenticated(req,res,"/login",uid);
     next();
-    });
+});
 
 app.get('/main',(req,res)=>{
     res.sendFile(path.join(__dirname,'assets','main.html'));
 })
 
 //AJAX retrieve user data from firestore
+app.get('/username/:uid', (req, res,next) => {
+    accessControlUnauthenticated(req,res,"/login",uid);
+    next();
+});
+
 app.get('/username/:uid',(req,res)=>{
     var userEmail = req.params.uid;
     var userRef = db.collection('Users').doc(userEmail);
